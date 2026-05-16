@@ -28,6 +28,11 @@ function Navbar() {
               Contact Us
             </Link>
           </li>
+          <li>
+            <Link to={"/jd-resume"}>
+              JD Match
+            </Link>
+          </li>
         </ul>
       </div>
       <Link to={'/'} className="btn btn-ghost text-xl">AI Resume Maker</Link>
@@ -49,6 +54,11 @@ function Navbar() {
         <Link
           to={"/contact"}>
           Contact Us
+        </Link>
+      </li>
+      <li>
+        <Link to={"/jd-resume"}>
+          JD Match
         </Link>
       </li>
       

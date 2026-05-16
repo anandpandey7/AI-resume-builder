@@ -8,6 +8,9 @@ import About from "./pages/About";
 import Services from "./pages/Services";
 import Contact from "./pages/Contact";
 import GenerateResume from "./pages/GenerateResume";
+import { Signup } from "./pages/Signup";
+import { Signin } from "./pages/Signin";
+import JdResume from "./pages/JdResume";
 import { Toaster } from "react-hot-toast";
 
 createRoot(document.getElementById("root")).render(
@@ -22,8 +25,29 @@ createRoot(document.getElementById("root")).render(
           <Route path="services" element={<Services />} />{/* /services */}
           <Route path="contact" element={<Contact />} />{/* /contact */}
           <Route path="generate-resume" element={<GenerateResume />} />{/* /genrate-resume */}
+          <Route path="signup" element= {<Signup/>} />
+          <Route path="signin" element= {<Signin/>} />
+          <Route path="jd-resume" element={<JdResume/>} />
         </Route>
       </Routes>
     </BrowserRouter>
   </StrictMode>
 );
+
+
+
+// React
+//  │
+//  ├── React Router → Page navigation
+//  ├── Axios → API requests
+//  ├── React Hook Form → Forms
+//  ├── React Hot Toast → Notifications
+//  ├── React Icons → Icons
+//  │
+//  ├── Tailwind CSS → Styling
+//  │
+//  ├── HTML to Image → Export UI as image
+//  ├── React to PDF → Export UI as PDF
+//  ├── React to Print → Print UI
+//  │
+//  └── TSParticles → Animated backgrounds
