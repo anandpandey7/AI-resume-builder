@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import toast from "react-hot-toast";
 import { FaBrain, FaTrash, FaPaperPlane, FaCheckCircle } from "react-icons/fa";
 import { generateResume, saveResume } from "../api/ResumeService";
@@ -40,6 +41,19 @@ const GenerateResume = () => {
   
   const [resumeTitle, setResumeTitle] = useState("");
   const dispatch = useDispatch();
+  const location = useLocation();
+
+  useEffect(() => {
+    if (location.state?.initialData) {
+      const passedData = location.state.initialData.data || location.state.initialData;
+      setData(passedData);
+      reset(passedData);
+      setShowFormUI(true);
+      setShowPromptInput(false);
+      // Clean up state so refresh doesn't keep reloading it if unwanted
+      window.history.replaceState({}, document.title);
+    }
+  }, [location.state, reset]);
   
   // States for Template Selection
   const [showTemplatePicker, setShowTemplatePicker] = useState(false);

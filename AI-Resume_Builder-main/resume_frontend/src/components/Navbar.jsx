@@ -1,6 +1,10 @@
 import React from "react";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 function Navbar() {
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+  const user = useSelector((state) => state.auth.user);
+
   return (
     <div className="navbar shadow bg-base-100 shadow-sm">
     <div className="navbar-start">
@@ -65,7 +69,15 @@ function Navbar() {
     </ul>
   </div>
   <div className="navbar-end">
-    <a className="btn">Login</a>
+    {isAuthenticated && user ? (
+      <Link to="/profile" className="avatar placeholder cursor-pointer hover:ring-2 hover:ring-primary hover:ring-offset-2 hover:ring-offset-base-100 rounded-full transition-all">
+        <div className="bg-primary text-primary-content rounded-full w-12 h-12 flex items-center justify-center font-bold text-xl shadow-lg">
+          <span>{user.firstName?.charAt(0).toUpperCase() || "U"}</span>
+        </div>
+      </Link>
+    ) : (
+      <Link to="/signin" className="btn btn-primary px-6 rounded-full font-semibold shadow-lg hover:shadow-primary/50 transition-all">Login</Link>
+    )}
   </div>
 </div>
   );

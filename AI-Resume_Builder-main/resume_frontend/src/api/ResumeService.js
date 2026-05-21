@@ -36,3 +36,8 @@ export const listSavedResumes = async () => {
     const response = await axiosInstance.get("/api/v1/resume/list");
     return response.data;
 }
+
+export const getResumeById = async (id) => {
+    const response = await axiosInstance.get(`/api/v1/resume/${id}`);
+    return response.data;
+}

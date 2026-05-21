@@ -11,6 +11,7 @@ import GenerateResume from "./pages/GenerateResume";
 import { Signup } from "./pages/Signup";
 import { Signin } from "./pages/Signin";
 import JdResume from "./pages/JdResume";
+import Profile from "./pages/Profile";
 import { Toaster } from "react-hot-toast";
 import { Provider } from 'react-redux';
 import { store } from './store/store';
@@ -31,6 +32,7 @@ createRoot(document.getElementById("root")).render(
             <Route path="signup" element= {<Signup/>} />
             <Route path="signin" element= {<Signin/>} />
             <Route path="jd-resume" element={<JdResume/>} />
+            <Route path="profile" element={<Profile/>} />
           </Route>
         </Routes>
       </BrowserRouter>
