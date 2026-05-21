@@ -21,8 +21,8 @@ function Navbar() {
 
           <li>
             <Link 
-              to={"/services"}>
-              Services
+              to={"/interview-prep"}>
+              Interview Prep
             </Link>
           </li>
 
@@ -49,8 +49,8 @@ function Navbar() {
 
       <li>
         <Link 
-          to={"/services"}>
-          Services
+          to={"/interview-prep"}>
+          Interview Prep
         </Link>
       </li>
 

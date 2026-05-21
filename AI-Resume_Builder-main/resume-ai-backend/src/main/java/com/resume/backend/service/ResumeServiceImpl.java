@@ -55,6 +55,20 @@ public class ResumeServiceImpl implements ResumeService{
         return stringObjectMap;
     }
 
+    @Override
+    public Map<String, Object> generateInterviewQuestions(Map<String, Object> resumeData) throws IOException {
+        String promptString = this.loadPromptFromFile("interview_prompt.txt");
+        String resumeJson = new ObjectMapper().writeValueAsString(resumeData);
+        String promptContent = this.putValuesToTemplate(promptString, Map.of(
+                "resumeJson", resumeJson
+        ));
+
+        Prompt prompt = new Prompt(promptContent);
+        String response = chatClient.prompt(prompt).call().content();
+        Map<String,Object> stringObjectMap = parseMultipleResponses(response);
+        return stringObjectMap;
+    }
+
     String loadPromptFromFile(String filename) throws IOException {
         ClassPathResource resource = new ClassPathResource(filename);
         try (BufferedReader reader = new BufferedReader(

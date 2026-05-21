@@ -1,0 +1,24 @@
+Based on the following resume JSON, generate a comprehensive list of interview questions tailored to the candidate's specific experience, skills, and background.
+
+Resume JSON:
+{{resumeJson}}
+
+Instructions:
+- Provide 5 Technical/Role-Specific questions that test the candidate's core competencies based on their listed skills and project experience.
+- Provide 5 Behavioral questions that explore the candidate's soft skills and past situations (e.g., leadership, conflict resolution, teamwork).
+- Provide a brief tip or expected answer guide for each question to help the candidate prepare.
+- Return the output ONLY as valid JSON in a ```json block, structured exactly as follows:
+{
+  "technicalQuestions": [
+    {
+      "question": "...",
+      "tip": "..."
+    }
+  ],
+  "behavioralQuestions": [
+    {
+      "question": "...",
+      "tip": "..."
+    }
+  ]
+}

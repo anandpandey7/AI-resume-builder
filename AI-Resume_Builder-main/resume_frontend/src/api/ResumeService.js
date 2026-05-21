@@ -49,3 +49,8 @@ export const editResume = async (resumeData, jobDescription) => {
     });
     return response.data;
 }
+
+export const generateInterviewQuestions = async (resumeData) => {
+    const response = await axiosInstance.post("/api/v1/resume/interview-questions", resumeData);
+    return response.data;
+}

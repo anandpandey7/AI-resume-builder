@@ -167,4 +167,12 @@ public class ResumeController {
         Map<String, Object> responseData = objectMapper.readValue(resume.getResumeJson(), new com.fasterxml.jackson.core.type.TypeReference<Map<String, Object>>() {});
         return ResponseEntity.ok(responseData);
     }
+
+    @PostMapping("/interview-questions")
+    public ResponseEntity<Map<String,Object>> generateInterviewQuestions(
+            @RequestBody Map<String, Object> resumeData
+    ) throws IOException {
+        Map<String, Object> questions = resumeService.generateInterviewQuestions(resumeData);
+        return ResponseEntity.ok(questions);
+    }
 }

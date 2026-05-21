@@ -23,6 +23,11 @@ export default function JdResume() {
   const savedResumes = useSelector((state) => state.resume.savedResumes);
   const navigate = useNavigate();
 
+  if (!isAuthenticated) {
+    navigate('/signin');
+    return null;
+  }
+
   const extractTextFromPDF = async (file) => {
     try {
       setIsLoading(true);

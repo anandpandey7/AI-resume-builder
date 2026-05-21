@@ -5,7 +5,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom"; // <- change th
 import Root from "./pages/Root";
 import Home from "./pages/Home";
 import About from "./pages/About";
-import Services from "./pages/Services";
+import InterviewPrep from "./pages/InterviewPrep";
 import Contact from "./pages/Contact";
 import GenerateResume from "./pages/GenerateResume";
 import { Signup } from "./pages/Signup";
@@ -26,7 +26,7 @@ createRoot(document.getElementById("root")).render(
             <Route index element={<Home />} />        {/* / */}
             <Route path="" element={<Home />} />  {/* /home */}
             <Route path="about" element={<About />} />{/* /about */}
-            <Route path="services" element={<Services />} />{/* /services */}
+            <Route path="interview-prep" element={<InterviewPrep />} />
             <Route path="contact" element={<Contact />} />{/* /contact */}
             <Route path="generate-resume" element={<GenerateResume />} />{/* /genrate-resume */}
             <Route path="signup" element= {<Signup/>} />
