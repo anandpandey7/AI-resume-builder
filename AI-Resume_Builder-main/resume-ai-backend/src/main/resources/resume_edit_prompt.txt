@@ -1,0 +1,14 @@
+Edit the resume JSON below so it is tailored to the provided job description. Preserve the resume structure exactly and keep all required keys.
+
+Resume JSON:
+{{resumeJson}}
+
+Job Description:
+"{{jobDescription}}"
+
+Instructions:
+- Update the resume content to better align with the job description.
+- Preserve the existing keys and hierarchy.
+- Improve the profile summary, skills, experience descriptions, projects, and certifications where appropriate.
+- Keep all values valid and consistent with the original resume data.
+- Return only valid JSON inside a ```json block, using the same schema as the resume generation template.

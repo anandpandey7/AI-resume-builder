@@ -1,20 +1,19 @@
 package com.resume.backend.service;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.util.HashMap;
-import java.util.Map;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
-import java.util.stream.Collectors;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class ResumeServiceImpl implements ResumeService{
@@ -33,14 +32,26 @@ public class ResumeServiceImpl implements ResumeService{
                 "userDescription",userResumeDescription
         ));
 
-
         Prompt prompt = new Prompt(promptContent);
-
 
         //return the generated response
         String response = chatClient.prompt(prompt).call().content();
         Map<String,Object> stringObjectMap= parseMultipleResponses(response);
-        //modify the response :
+        return stringObjectMap;
+    }
+
+    @Override
+    public Map<String, Object> editResumeForJobDescription(Map<String, Object> resumeData, String jobDescription) throws IOException {
+        String promptString = this.loadPromptFromFile("resume_edit_prompt.txt");
+        String resumeJson = new ObjectMapper().writeValueAsString(resumeData);
+        String promptContent = this.putValuesToTemplate(promptString, Map.of(
+                "resumeJson", resumeJson,
+                "jobDescription", jobDescription
+        ));
+
+        Prompt prompt = new Prompt(promptContent);
+        String response = chatClient.prompt(prompt).call().content();
+        Map<String,Object> stringObjectMap= parseMultipleResponses(response);
         return stringObjectMap;
     }
 
