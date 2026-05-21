@@ -41,3 +41,11 @@ export const getResumeById = async (id) => {
     const response = await axiosInstance.get(`/api/v1/resume/${id}`);
     return response.data;
 }
+
+export const editResume = async (resumeData, jobDescription) => {
+    const response = await axiosInstance.post("/api/v1/resume/edit", {
+        resumeData,
+        jobDescription
+    });
+    return response.data;
+}
