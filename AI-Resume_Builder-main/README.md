@@ -14,6 +14,9 @@ The AI Resume Builder is an innovative web application that leverages artificial
 - ✅ AI-powered resume generation with 95% accuracy
 - ✅ 5 distinct resume templates with responsive design
 - ✅ Multi-format export capabilities (PDF, PNG, JPEG)
+- ✅ User Authentication and Profile Management
+- ✅ Interactive JD Match & AI Resume Tailoring
+- ✅ AI-Generated Interview Preparation
 - ✅ RESTful API architecture
 - ✅ Containerized deployment ready
 - ✅ Cross-platform compatibility
@@ -750,9 +753,9 @@ docker run -e GEMINI_API_KEY=your_key resume-backend
 - ✅ User acceptance testing
 
 ### Future Roadmap (Q2 2026)
-- 🔄 User authentication system
-- 🔄 Resume storage and management
-- 🔄 Advanced AI features (ATS optimization)
+- ✅ User authentication system
+- ✅ Resume storage and management
+- ✅ Advanced AI features (JD Tailoring, Interview Prep)
 - 🔄 Mobile app development
 - 🔄 Multi-language support
 
@@ -792,8 +795,9 @@ docker run -e GEMINI_API_KEY=your_key resume-backend
 ## 🔮 Future Enhancements
 
 ### Short-term (3-6 months)
-- [ ] User authentication and profiles
-- [ ] Resume saving and management
+- [x] User authentication and profiles
+- [x] Resume saving and management
+- [x] Advanced AI features (Interview prep & JD Matching)
 - [ ] Advanced customization options
 - [ ] Better error handling and user feedback
 - [ ] Performance monitoring dashboard
