@@ -26,3 +26,13 @@ export const generateResume=async(description)=>{
 
     return response.data;
 }
+
+export const saveResume = async (resumeData) => {
+    const response = await axiosInstance.post("/api/v1/resume/save", resumeData);
+    return response.data;
+}
+
+export const listSavedResumes = async () => {
+    const response = await axiosInstance.get("/api/v1/resume/list");
+    return response.data;
+}

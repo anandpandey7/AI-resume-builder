@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { FaBrain, FaTrash, FaPaperPlane, FaCheckCircle } from "react-icons/fa";
-import { generateResume } from "../api/ResumeService";
+import { generateResume, saveResume } from "../api/ResumeService";
 import { BiBook } from "react-icons/bi";
 import { useForm, useFieldArray } from "react-hook-form";
 import { FaPlusCircle } from "react-icons/fa";
+import { useDispatch } from "react-redux";
+import { addSavedResume } from "../store/resumeSlice";
 
 // Import all templates
 import Resume from "../components/Resume";
@@ -35,6 +37,9 @@ const GenerateResume = () => {
   const [showFormUI, setShowFormUI] = useState(false);
   const [showResumeUI, setShowResumeUI] = useState(false);
   const [showPromptInput, setShowPromptInput] = useState(true);
+  
+  const [resumeTitle, setResumeTitle] = useState("");
+  const dispatch = useDispatch();
   
   // States for Template Selection
   const [showTemplatePicker, setShowTemplatePicker] = useState(false);
@@ -82,6 +87,30 @@ const GenerateResume = () => {
 
   const handleClear = () => {
     setDescription("");
+  };
+
+  const handleSaveToProfile = async () => {
+    if (!resumeTitle.trim()) {
+      toast.error("Please enter a title");
+      return;
+    }
+    try {
+      setLoading(true);
+      const payload = {
+        title: resumeTitle,
+        data: data
+      };
+      const response = await saveResume(payload);
+      dispatch(addSavedResume({ ...response, createdAt: new Date().toISOString() })); 
+      toast.success("Resume Saved Successfully!");
+      document.getElementById('save_modal').close();
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to save resume");
+    } finally {
+      setLoading(false);
+      setResumeTitle("");
+    }
   };
 
   const templates = [
@@ -289,6 +318,12 @@ const GenerateResume = () => {
           >
             Edit
           </div>
+          <div
+            onClick={() => document.getElementById('save_modal').showModal()}
+            className="btn btn-warning"
+          >
+            Save to Profile
+          </div>
         </div>
       </div>
     );
@@ -300,6 +335,27 @@ const GenerateResume = () => {
       {showFormUI && showFormFunction()}
       {showTemplatePicker && ShowTemplatePickerUI()}
       {showResumeUI && showResume()}
+
+      <dialog id="save_modal" className="modal">
+        <div className="modal-box bg-base-100">
+          <h3 className="font-bold text-lg mb-4 text-base-content">Save Resume</h3>
+          <input 
+            type="text" 
+            placeholder="e.g. Frontend Developer Resume" 
+            className="input input-bordered w-full text-base-content" 
+            value={resumeTitle}
+            onChange={(e) => setResumeTitle(e.target.value)}
+          />
+          <div className="modal-action">
+            <button className="btn btn-primary" onClick={handleSaveToProfile} disabled={loading}>
+              {loading ? <span className="loading loading-spinner"></span> : "Save"}
+            </button>
+            <form method="dialog">
+              <button className="btn">Cancel</button>
+            </form>
+          </div>
+        </div>
+      </dialog>
     </div>
   );
 };

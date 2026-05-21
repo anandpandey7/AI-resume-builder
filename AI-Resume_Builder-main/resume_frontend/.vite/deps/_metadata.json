@@ -1,0 +1,109 @@
+{
+  "hash": "06aaa7fe",
+  "configHash": "9d5930b8",
+  "lockfileHash": "01ba0997",
+  "browserHash": "f48e470a",
+  "optimized": {
+    "react": {
+      "src": "../../node_modules/react/index.js",
+      "file": "react.js",
+      "fileHash": "f5f33e80",
+      "needsInterop": true
+    },
+    "react-dom/client": {
+      "src": "../../node_modules/react-dom/client.js",
+      "file": "react-dom_client.js",
+      "fileHash": "849c310e",
+      "needsInterop": true
+    },
+    "react-router-dom": {
+      "src": "../../node_modules/react-router-dom/dist/index.mjs",
+      "file": "react-router-dom.js",
+      "fileHash": "e79798b3",
+      "needsInterop": false
+    },
+    "react-hot-toast": {
+      "src": "../../node_modules/react-hot-toast/dist/index.mjs",
+      "file": "react-hot-toast.js",
+      "fileHash": "eb73b618",
+      "needsInterop": false
+    },
+    "react-router": {
+      "src": "../../node_modules/react-router/dist/development/index.mjs",
+      "file": "react-router.js",
+      "fileHash": "b41cc472",
+      "needsInterop": false
+    },
+    "pdfjs-dist": {
+      "src": "../../node_modules/pdfjs-dist/build/pdf.mjs",
+      "file": "pdfjs-dist.js",
+      "fileHash": "c3f46e85",
+      "needsInterop": false
+    },
+    "react-icons/fa": {
+      "src": "../../node_modules/react-icons/fa/index.mjs",
+      "file": "react-icons_fa.js",
+      "fileHash": "d30455eb",
+      "needsInterop": false
+    },
+    "react-icons/bi": {
+      "src": "../../node_modules/react-icons/bi/index.mjs",
+      "file": "react-icons_bi.js",
+      "fileHash": "74b2126b",
+      "needsInterop": false
+    },
+    "react-hook-form": {
+      "src": "../../node_modules/react-hook-form/dist/index.esm.mjs",
+      "file": "react-hook-form.js",
+      "fileHash": "4c52bab5",
+      "needsInterop": false
+    },
+    "axios": {
+      "src": "../../node_modules/axios/index.js",
+      "file": "axios.js",
+      "fileHash": "d7bf56b0",
+      "needsInterop": false
+    },
+    "html-to-image": {
+      "src": "../../node_modules/html-to-image/es/index.js",
+      "file": "html-to-image.js",
+      "fileHash": "dc67c007",
+      "needsInterop": false
+    },
+    "jspdf": {
+      "src": "../../node_modules/jspdf/dist/jspdf.es.min.js",
+      "file": "jspdf.js",
+      "fileHash": "2e5252b9",
+      "needsInterop": false
+    }
+  },
+  "chunks": {
+    "chunk-CHCNZ3WA": {
+      "file": "chunk-CHCNZ3WA.js"
+    },
+    "html2canvas.esm-7CZWBEEN": {
+      "file": "html2canvas__esm-7CZWBEEN.js"
+    },
+    "purify.es-Q4BNLBXK": {
+      "file": "purify__es-Q4BNLBXK.js"
+    },
+    "index.es-NHZCGRHC": {
+      "file": "index__es-NHZCGRHC.js"
+    },
+    "chunk-CNXRZJUE": {
+      "file": "chunk-CNXRZJUE.js"
+    },
+    "chunk-J6V5AOKU": {
+      "file": "chunk-J6V5AOKU.js"
+    },
+    "chunk-MN723W6E": {
+      "file": "chunk-MN723W6E.js"
+    },
+    "chunk-SITVF2AJ": {
+      "file": "chunk-SITVF2AJ.js"
+    },
+    "chunk-4MBMRILA": {
+      "file": "chunk-4MBMRILA.js"
+    }
+  }
+}

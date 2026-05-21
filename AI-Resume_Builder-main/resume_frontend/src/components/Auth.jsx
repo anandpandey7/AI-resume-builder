@@ -2,25 +2,35 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { baseURLL } from "../api/ResumeService"; 
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { setCredentials } from "../store/authSlice";
 
 export const Auth = ({ type }) => {
   const [loading, setLoading] = useState(false);
   const [postInputs, setPostInputs] = useState({
-    name: "",
+    firstName: "",
+    lastName: "",
     email: "",
     password: "",
   });
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   async function sendRequest() {
     try {
       setLoading(true);
+      const endpoint = type === "signup" ? "signup" : "login";
+      const payload = type === "signup" 
+        ? postInputs 
+        : { email: postInputs.email, password: postInputs.password };
+
       const response = await axios.post(
-        `${baseURLL}/api/v1/user/${type === "signup" ? "signup" : "signin"}`,
-        postInputs
+        `${baseURLL}/api/v1/auth/${endpoint}`,
+        payload
       );
-      const token = response.data.token;
-      localStorage.setItem("token", token);
+      
+      const { token, email, firstName, lastName } = response.data;
+      dispatch(setCredentials({ token, email, firstName, lastName }));
       navigate("/");
     } catch (error) {
       if (axios.isAxiosError && axios.isAxiosError(error)) {
@@ -53,16 +63,28 @@ export const Auth = ({ type }) => {
 
           <form className="space-y-4 sm:space-y-6" onSubmit={(e) => e.preventDefault()}>
             {type === "signup" && (
-              <LabelledInput
-                label="Full Name"
-                placeholder="e.g. John Doe"
-                onChange={(e) => {
-                  setPostInputs({
-                    ...postInputs,
-                    name: e.target.value,
-                  });
-                }}
-              />
+              <div className="flex gap-4">
+                <LabelledInput
+                  label="First Name"
+                  placeholder="e.g. John"
+                  onChange={(e) => {
+                    setPostInputs({
+                      ...postInputs,
+                      firstName: e.target.value,
+                    });
+                  }}
+                />
+                <LabelledInput
+                  label="Last Name"
+                  placeholder="e.g. Doe"
+                  onChange={(e) => {
+                    setPostInputs({
+                      ...postInputs,
+                      lastName: e.target.value,
+                    });
+                  }}
+                />
+              </div>
             )}
 
             <LabelledInput

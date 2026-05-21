@@ -12,25 +12,29 @@ import { Signup } from "./pages/Signup";
 import { Signin } from "./pages/Signin";
 import JdResume from "./pages/JdResume";
 import { Toaster } from "react-hot-toast";
+import { Provider } from 'react-redux';
+import { store } from './store/store';
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <BrowserRouter>
-     <Toaster />
-      <Routes>
-        <Route path="/" element={<Root />}>
-          <Route index element={<Home />} />        {/* / */}
-          <Route path="" element={<Home />} />  {/* /home */}
-          <Route path="about" element={<About />} />{/* /about */}
-          <Route path="services" element={<Services />} />{/* /services */}
-          <Route path="contact" element={<Contact />} />{/* /contact */}
-          <Route path="generate-resume" element={<GenerateResume />} />{/* /genrate-resume */}
-          <Route path="signup" element= {<Signup/>} />
-          <Route path="signin" element= {<Signin/>} />
-          <Route path="jd-resume" element={<JdResume/>} />
-        </Route>
-      </Routes>
-    </BrowserRouter>
+    <Provider store={store}>
+      <BrowserRouter>
+       <Toaster />
+        <Routes>
+          <Route path="/" element={<Root />}>
+            <Route index element={<Home />} />        {/* / */}
+            <Route path="" element={<Home />} />  {/* /home */}
+            <Route path="about" element={<About />} />{/* /about */}
+            <Route path="services" element={<Services />} />{/* /services */}
+            <Route path="contact" element={<Contact />} />{/* /contact */}
+            <Route path="generate-resume" element={<GenerateResume />} />{/* /genrate-resume */}
+            <Route path="signup" element= {<Signup/>} />
+            <Route path="signin" element= {<Signin/>} />
+            <Route path="jd-resume" element={<JdResume/>} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </Provider>
   </StrictMode>
 );
 
