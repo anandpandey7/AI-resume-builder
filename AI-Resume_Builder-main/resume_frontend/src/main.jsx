@@ -12,6 +12,7 @@ import { Signup } from "./pages/Signup";
 import { Signin } from "./pages/Signin";
 import JdResume from "./pages/JdResume";
 import Profile from "./pages/Profile";
+import ProtectedRoute from "./components/ProtectedRoute";
 import { Toaster } from "react-hot-toast";
 import { Provider } from 'react-redux';
 import { store } from './store/store';
@@ -26,13 +27,13 @@ createRoot(document.getElementById("root")).render(
             <Route index element={<Home />} />        {/* / */}
             <Route path="" element={<Home />} />  {/* /home */}
             <Route path="about" element={<About />} />{/* /about */}
-            <Route path="interview-prep" element={<InterviewPrep />} />
+            <Route path="interview-prep" element={<ProtectedRoute><InterviewPrep /></ProtectedRoute>} />
             <Route path="contact" element={<Contact />} />{/* /contact */}
             <Route path="generate-resume" element={<GenerateResume />} />{/* /genrate-resume */}
             <Route path="signup" element= {<Signup/>} />
             <Route path="signin" element= {<Signin/>} />
-            <Route path="jd-resume" element={<JdResume/>} />
-            <Route path="profile" element={<Profile/>} />
+            <Route path="jd-resume" element={<ProtectedRoute><JdResume/></ProtectedRoute>} />
+            <Route path="profile" element={<ProtectedRoute><Profile/></ProtectedRoute>} />
           </Route>
         </Routes>
       </BrowserRouter>

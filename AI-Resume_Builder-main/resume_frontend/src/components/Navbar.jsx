@@ -6,7 +6,7 @@ function Navbar() {
   const user = useSelector((state) => state.auth.user);
 
   return (
-    <div className="navbar shadow bg-base-100 shadow-sm">
+    <div className="navbar bg-base-100/80 backdrop-blur-md sticky top-0 z-50 shadow-sm px-4 lg:px-8 border-b border-base-200">
     <div className="navbar-start">
     <div className="dropdown">
         <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
@@ -39,29 +39,29 @@ function Navbar() {
           </li>
         </ul>
       </div>
-      <Link to={'/'} className="btn btn-ghost text-xl">AI Resume Maker</Link>
+      <Link to={'/'} className="btn btn-ghost text-2xl font-bold tracking-tight text-primary">AI Resume Maker</Link>
     </div>
   <div className="navbar-center hidden lg:flex">
-    <ul className="menu menu-horizontal px-1">
-      <li><Link to={"/about"}>
+    <ul className="menu menu-horizontal px-1 gap-2 font-medium">
+      <li><Link to={"/about"} className="hover:text-primary transition-colors rounded-lg">
         About</Link>
       </li>
 
       <li>
         <Link 
-          to={"/interview-prep"}>
+          to={"/interview-prep"} className="hover:text-primary transition-colors rounded-lg">
           Interview Prep
         </Link>
       </li>
 
       <li>
         <Link
-          to={"/contact"}>
+          to={"/contact"} className="hover:text-primary transition-colors rounded-lg">
           Contact Us
         </Link>
       </li>
       <li>
-        <Link to={"/jd-resume"}>
+        <Link to={"/jd-resume"} className="hover:text-primary transition-colors rounded-lg">
           JD Match
         </Link>
       </li>

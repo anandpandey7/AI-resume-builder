@@ -13,11 +13,6 @@ export default function InterviewPrep() {
   const [isLoading, setIsLoading] = useState(false);
   const [questions, setQuestions] = useState(null);
 
-  if (!isAuthenticated) {
-    navigate('/signin');
-    return null;
-  }
-
   const handleGenerateQuestions = async () => {
     if (!selectedResumeId) {
       toast.error('Please select a saved resume first.');

@@ -12,11 +12,6 @@ function Profile() {
   const navigate = useNavigate();
   const [loadingId, setLoadingId] = useState(null);
 
-  if (!isAuthenticated || !user) {
-    navigate('/signin');
-    return null;
-  }
-
   const handleLogout = () => {
     dispatch(logout());
     navigate('/');
