@@ -4,7 +4,7 @@
 
 **Project Name**: AI Resume Builder  
 **Version**: 1.0.0  
-**Date**: March 8, 2026  
+**Date**: May 22, 2026  
 **Status**: Production Ready  
 
 ### Project Overview
@@ -68,13 +68,20 @@ graph TB
 resume_frontend/
 ├── public/                 # Static assets
 ├── src/
-│   ├── api/               # API service layer
 │   ├── components/        # Reusable UI components
+│   │   ├── Auth.jsx       # Authentication form component
 │   │   ├── Navbar.jsx     # Navigation component
-│   │   └── Resume.jsx     # Resume display components
+│   │   ├── ProtectedRoute.jsx # Route guarding logic
+│   │   └── Resume[1-5].jsx # Various Resume templates
 │   ├── pages/             # Route components
-│   │   ├── GenerateResume.jsx  # Main functionality
-│   │   └── Home.jsx       # Landing page
+│   │   ├── LandingPage.jsx     # Landing page
+│   │   ├── GenerateResume.jsx  # AI Resume generation
+│   │   ├── JdResume.jsx        # JD Match and tailoring
+│   │   ├── InterviewPrep.jsx   # AI Interview preparation
+│   │   ├── Profile.jsx         # User profile and saved resumes
+│   │   ├── Signin.jsx / Signup.jsx # Authentication pages
+│   │   └── Root.jsx            # Layout wrapper
+│   ├── store/             # Redux state management
 │   ├── assets/            # Images and icons
 │   └── main.jsx           # Application entry point
 ```
@@ -83,12 +90,17 @@ resume_frontend/
 ```
 resume-ai-backend/
 ├── src/main/java/com/resume/backend/
-│   ├── Controller/        # REST API endpoints
-│   ├── service/           # Business logic
-│   ├── ResumeRequest.java # Data transfer objects
-│   └── Application.java   # Spring Boot main class
+│   ├── Controller/        # REST API endpoints (Resume, Auth, User, Interview)
+│   ├── service/           # Business logic (ResumeServiceImpl, UserDetailsServiceImpl)
+│   ├── repository/        # Spring Data JPA interfaces (UserRepository, ResumeRepository)
+│   ├── entity/            # JPA Entities (User, SavedResume)
+│   ├── dto/               # Data Transfer Objects
+│   ├── config/            # Configuration (SecurityConfig)
+│   ├── filter/            # Request filters (JwtFilter)
+│   ├── util/              # Utilities (JwtUtil)
+│   └── ResumeAiBackendApplication.java # Spring Boot main class
 ├── src/main/resources/
-│   ├── application.properties  # Configuration
+│   ├── application.properties  # Database & JWT Configuration
 │   └── resume_prompt.txt       # AI prompt template
 └── Dockerfile           # Container configuration
 ```
@@ -98,7 +110,8 @@ resume-ai-backend/
 #### Frontend Technologies
 | Component | Technology | Version | Purpose |
 |-----------|------------|---------|---------|
-| Framework | React | 19.2.0 | UI rendering and state management |
+| Framework | React | 19.2.0 | UI rendering |
+| State Mgmt | Redux Toolkit | 2.12.0 | Global state management (Auth, Resume) |
 | Build Tool | Vite | 7.2.4 | Fast development and optimized builds |
 | Styling | Tailwind CSS | 4.1.17 | Utility-first CSS framework |
 | UI Components | DaisyUI | 5.5.8 | Pre-built component library |
@@ -163,33 +176,26 @@ resume-ai-backend/
 ### Database Schema
 
 ```sql
--- Resume Generation History (Optional)
-CREATE TABLE resume_history (
+-- Users Table
+CREATE TABLE users (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
-    user_id VARCHAR(255),
-    input_description TEXT,
-    generated_resume JSON,
-    template_used VARCHAR(50),
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    first_name VARCHAR(255) NOT NULL,
+    last_name VARCHAR(255) NOT NULL,
+    is_active BOOLEAN NOT NULL DEFAULT TRUE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    ip_address VARCHAR(45)
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 );
 
--- User Sessions (Optional)
-CREATE TABLE user_sessions (
-    session_id VARCHAR(255) PRIMARY KEY,
-    user_data JSON,
-    expires_at TIMESTAMP,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
--- API Usage Tracking
-CREATE TABLE api_usage (
+-- Saved Resumes Table
+CREATE TABLE resumes (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
-    endpoint VARCHAR(255),
-    method VARCHAR(10),
-    response_time_ms INT,
-    status_code INT,
-    timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    user_id BIGINT NOT NULL,
+    title VARCHAR(255),
+    resume_json TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 ```
 
@@ -223,130 +229,72 @@ http://localhost:8080/api/v1
 ```
 
 ### Authentication
-Currently: No authentication required (CORS enabled for all origins)
-Future: JWT-based authentication planned
+**Mechanism**: JWT-based authentication using an HTTP-only `jwtToken` cookie. 
+Frontend requests must include credentials (e.g., `withCredentials: true` in Axios).
 
 ### Endpoints
 
-#### 1. Generate Resume
-**Endpoint**: `POST /api/v1/resume/generate`  
-**Content-Type**: `application/json`  
-**Rate Limit**: 60 requests/minute
+#### Authentication (`/api/v1/auth`)
 
-**Request Body**:
-```json
-{
-  "userDescription": "Software Engineer with 5+ years of experience in full-stack development. Proficient in Java, Spring Boot, React, and cloud technologies. Led multiple projects and mentored junior developers."
-}
-```
+1. **Signup**
+   - **Endpoint**: `POST /signup`
+   - **Request Body**: `{ "firstName": "John", "lastName": "Doe", "email": "john@example.com", "password": "pass" }`
+   - **Response**: `201 Created` with `AuthResponse` object and sets `jwtToken` cookie.
 
-**Response (200 OK)**:
-```json
-{
-  "personalInformation": {
-    "fullName": "John Doe",
-    "email": "john.doe@example.com",
-    "phoneNumber": "+1-555-0123",
-    "location": "San Francisco, CA",
-    "linkedIn": "https://linkedin.com/in/johndoe",
-    "gitHub": "https://github.com/johndoe",
-    "portfolio": null
-  },
-  "summary": "Experienced Software Engineer with 5+ years in full-stack development...",
-  "skills": [
-    {
-      "title": "Java",
-      "level": "Expert"
-    },
-    {
-      "title": "React",
-      "level": "Advanced"
-    },
-    {
-      "title": "Spring Boot",
-      "level": "Expert"
-    }
-  ],
-  "experience": [
-    {
-      "jobTitle": "Senior Software Engineer",
-      "company": "Tech Corp",
-      "location": "San Francisco, CA",
-      "duration": "Jan 2022 - Present",
-      "responsibility": "Led development of microservices architecture..."
-    }
-  ],
-  "education": [
-    {
-      "degree": "Bachelor of Science in Computer Science",
-      "university": "University of California",
-      "location": "Berkeley, CA",
-      "graduationYear": "2020"
-    }
-  ],
-  "certifications": [
-    {
-      "title": "AWS Certified Solutions Architect",
-      "issuingOrganization": "Amazon Web Services",
-      "year": "2023"
-    }
-  ],
-  "projects": [
-    {
-      "title": "E-commerce Platform",
-      "description": "Built scalable e-commerce solution serving 10k+ users",
-      "technologiesUsed": ["React", "Node.js", "MongoDB", "AWS"],
-      "githubLink": "https://github.com/johndoe/ecommerce"
-    }
-  ],
-  "achievements": [
-    {
-      "title": "Employee of the Year",
-      "year": "2023",
-      "extraInformation": "Recognized for outstanding performance and leadership"
-    }
-  ],
-  "languages": [
-    {
-      "id": 1,
-      "name": "English"
-    },
-    {
-      "id": 2,
-      "name": "Spanish"
-    }
-  ]
-}
-```
+2. **Login**
+   - **Endpoint**: `POST /login`
+   - **Request Body**: `{ "email": "john@example.com", "password": "pass" }`
+   - **Response**: `200 OK` with `AuthResponse` object and sets `jwtToken` cookie.
 
-**Error Responses**:
-```json
-// 400 Bad Request
-{
-  "error": "Invalid input",
-  "message": "userDescription cannot be empty"
-}
+3. **Logout**
+   - **Endpoint**: `POST /logout`
+   - **Response**: `200 OK`, clears the `jwtToken` cookie.
 
-// 429 Too Many Requests
-{
-  "error": "Rate limit exceeded",
-  "message": "Please try again later"
-}
+4. **Verify Token**
+   - **Endpoint**: `GET /verify`
+   - **Response**: `200 OK` with `AuthResponse` indicating the token is valid.
 
-// 500 Internal Server Error
-{
-  "error": "AI service unavailable",
-  "message": "Unable to generate resume at this time"
-}
-```
+#### Resume Operations (`/api/v1/resume`)
+
+1. **Generate Resume**
+   - **Endpoint**: `POST /generate`
+   - **Request Body**: `{ "userDescription": "Software Engineer with 5+ years..." }`
+   - **Response**: `200 OK` with structured JSON representing the AI-generated resume.
+
+2. **Edit Resume for JD**
+   - **Endpoint**: `POST /edit`
+   - **Request Body**: `{ "resumeData": { ... }, "jobDescription": "Looking for a React developer..." }`
+   - **Response**: `200 OK` with the tailored resume JSON data.
+
+3. **Save Resume**
+   - **Endpoint**: `POST /save`
+   - **Auth Required**: Yes
+   - **Request Body**: Complete structured JSON of the resume.
+   - **Response**: `200 OK` returning `{ "userId": 1, "resumeId": 2, "title": "Resume - John Doe" }`.
+
+4. **List Saved Resumes**
+   - **Endpoint**: `GET /list`
+   - **Auth Required**: Yes
+   - **Response**: `200 OK` returning a list of saved resumes: `[{"resumeId": 1, "title": "Resume - John Doe", "createdAt": "..."}]`.
+
+5. **Get Resume by ID**
+   - **Endpoint**: `GET /{id}`
+   - **Auth Required**: Yes
+   - **Response**: `200 OK` returning the structured JSON of the specific saved resume.
+
+6. **Generate Interview Questions**
+   - **Endpoint**: `POST /interview-questions`
+   - **Request Body**: Complete structured JSON of the resume.
+   - **Response**: `200 OK` with a JSON containing generated interview questions and preparation tips.
 
 ### API Response Codes
-- **200**: Success
-- **400**: Bad Request (invalid input)
-- **401**: Unauthorized (future use)
-- **429**: Too Many Requests
-- **500**: Internal Server Error
-- **503**: Service Unavailable (AI service down)
+- **200 OK**: Request successful.
+- **201 Created**: Resource created successfully (e.g., user signup).
+- **400 Bad Request**: Invalid input.
+- **401 Unauthorized**: Authentication failed or token missing.
+- **403 Forbidden**: Access denied (e.g., accessing another user's resume).
+- **429 Too Many Requests**: Rate limit exceeded (Gemini API).
+- **500 Internal Server Error**: Server error or AI service unavailable.
 
 ---
 
@@ -726,39 +674,42 @@ docker run -e GEMINI_API_KEY=your_key resume-backend
 
 ## 📅 Project Timeline
 
-### Phase 1: Planning & Design (Week 1-2)
-- ✅ Requirements gathering
-- ✅ Technology stack selection
-- ✅ UI/UX design mockups
-- ✅ API design specification
+### Phase 1: Planning & Design (Week 1-4)
+- ✅ Requirements gathering & Technology stack selection
+- ✅ UI/UX design mockups (DaisyUI + Tailwind)
+- ✅ API design & Database schema specification
 
-### Phase 2: Core Development (Week 3-6)
-- ✅ Frontend setup (React + Vite)
-- ✅ Backend setup (Spring Boot)
-- ✅ AI integration (Gemini API)
-- ✅ Basic resume generation
-- ✅ Template system implementation
+### Phase 2: Core Development (Week 5-10)
+- ✅ Frontend scaffolding (React + Vite)
+- ✅ Backend architecture setup (Spring Boot)
+- ✅ AI integration (Google Gemini API)
+- ✅ Basic resume generation logic
 
-### Phase 3: Features & Testing (Week 7-10)
-- ✅ Multiple resume templates
-- ✅ Export functionality (PDF/Image)
-- ✅ Responsive design
-- ✅ Unit and integration tests
-- ✅ Performance optimization
+### Phase 3: UI Enhancement & State Management (Week 11-15)
+- ✅ Multiple professional resume templates (5 variations)
+- ✅ Export functionality (PDF and Image generation)
+- ✅ Responsive layout & modern premium aesthetics
+- ✅ Frontend state management implementation (Redux Toolkit)
 
-### Phase 4: Deployment & Documentation (Week 11-12)
-- ✅ Docker containerization
-- ✅ Production deployment setup
-- ✅ Comprehensive documentation
-- ✅ User acceptance testing
+### Phase 4: Security & Advanced Features (Week 16-20)
+- ✅ JWT-based User Authentication system
+- ✅ Database integration for Persistent Storage (MySQL)
+- ✅ Resume saving, listing, and management
+- ✅ AI JD Match & Tailoring functionality
+- ✅ AI-powered Interview Preparation module
 
-### Future Roadmap (Q2 2026)
-- ✅ User authentication system
-- ✅ Resume storage and management
-- ✅ Advanced AI features (JD Tailoring, Interview Prep)
-- 🔄 Mobile app development
-- 🔄 Multi-language support
+### Phase 5: Deployment & Documentation (Week 21-24)
+- ✅ Docker containerization (Multi-stage builds)
+- ✅ Production environment setup
+- ✅ Comprehensive project documentation
+- ✅ Final unit and integration testing
 
+### Future Roadmap (Q3 2026 & Beyond)
+- 🔄 Mobile App Development (React Native / Flutter)
+- 🔄 Multi-language support (i18n)
+- 🔄 Automated Cover Letter generation
+- 🔄 Direct LinkedIn profile import integration
+- 🔄 Social sharing & public resume links
 ---
 
 ## ⚠️ Risk Analysis
